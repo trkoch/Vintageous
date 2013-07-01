@@ -235,8 +235,11 @@ class ViReverseFindInLineExclusive(sublime_plugin.TextCommand):
 
 class ViGoToLine(sublime_plugin.TextCommand):
     def run(self, edit, extend=False, line=None):
+        state = VintageState(self.view)
         line = line if line > 0 else 1
-        dest = self.view.text_point(line - 1, 0)
+        if state.mode not in (MODE_VISUAL, MODE_VISUAL_LINE):
+            line = line - 1
+        dest = self.view.text_point(line, 0)
 
         def f(view, s):
             if not extend:
