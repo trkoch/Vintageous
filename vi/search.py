@@ -1,7 +1,7 @@
 import sublime
 
 
-def find_in_range(view, term, start, end, flags=0):
+def find_in_range(view, term, start, end, flags=sublime.LITERAL):
     found = view.find(term, start, flags)
     if found and found.b <= end:
         return found
