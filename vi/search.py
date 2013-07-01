@@ -7,7 +7,7 @@ def find_in_range(view, term, start, end, flags=sublime.LITERAL):
         return found
 
 
-def find_wrapping(view, term, start, end, flags=0, times=1):
+def find_wrapping(view, term, start, end, flags=sublime.LITERAL, times=1):
     current_sel = view.sel()[0]
     # Search wrapping around the end of the buffer.
     for x in range(times):
@@ -27,7 +27,7 @@ def find_wrapping(view, term, start, end, flags=0, times=1):
     return match
 
 
-def reverse_find_wrapping(view, term, start, end, flags=0, times=1):
+def reverse_find_wrapping(view, term, start, end, flags=sublime.LITERAL, times=1):
     current_sel = view.sel()[0]
     # Search wrapping around the end of the buffer.
     for x in range(times):
@@ -47,7 +47,7 @@ def reverse_find_wrapping(view, term, start, end, flags=0, times=1):
     return match
 
 
-def find_last_in_range(view, term, start, end, flags=0):
+def find_last_in_range(view, term, start, end, flags=sublime.LITERAL):
     found = find_in_range(view, term, start, end, flags)
     last_found = found
     while found:
@@ -60,7 +60,7 @@ def find_last_in_range(view, term, start, end, flags=0):
 
 
 # reverse search
-def reverse_search(view, term, start, end, flags=0):
+def reverse_search(view, term, start, end, flags=sublime.LITERAL):
     assert isinstance(start, int) or start is None
     assert isinstance(end, int) or end is None
 
@@ -94,7 +94,7 @@ def reverse_search(view, term, start, end, flags=0):
             return find_last_in_range(view, term, hi_line.a, min(hi_line.b, end), flags)
 
 
-def reverse_search_by_pt(view, term, start, end, flags=0):
+def reverse_search_by_pt(view, term, start, end, flags=sublime.LITERAL):
     assert isinstance(start, int) or start is None
     assert isinstance(end, int) or end is None
 
