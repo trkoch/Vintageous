@@ -236,16 +236,31 @@ class ViReverseFindInLineExclusive(sublime_plugin.TextCommand):
 class ViGoToLine(sublime_plugin.TextCommand):
     def run(self, edit, extend=False, line=None):
         state = VintageState(self.view)
+
         line = line if line > 0 else 1
-        if state.mode not in (MODE_VISUAL, MODE_VISUAL_LINE):
+        (cur_line, cur_col) = self.view.rowcol(self.view.sel()[0].begin())
+
+        # In visual mode we treat the user provided line as destination line,
+        # except if the provided line results in a selection above the current line
+        is_up = line < cur_line
+        if state.mode in (MODE_VISUAL, MODE_VISUAL_LINE):
+            if is_up:
+                line = line - 1
+        else:
             line = line - 1
+
         dest = self.view.text_point(line, 0)
 
         def f(view, s):
             if not extend:
                 return sublime.Region(dest, dest)
             else:
-                return sublime.Region(s.a, dest)
+                # Required to include current line in selection above
+                if is_up and state.mode == MODE_VISUAL_LINE:
+                    src = self.view.text_point(cur_line + 1, cur_col)
+                else:
+                    src = s.a
+                return sublime.Region(src, dest)
 
         regions_transformer(self.view, f)
 
