@@ -1100,7 +1100,8 @@ class _vi_cc_action(sublime_plugin.TextCommand):
             if mode == _MODE_INTERNAL_NORMAL:
                 begin = self.view.text_point(self.view.rowcol(s.b)[0], 0)
                 view.erase(edit, s)
-                return sublime.Region(begin)
+                pt = utils.next_non_white_space_char(view, begin)
+                return sublime.Region(pt)
             return s
 
         def ff(view, s):
@@ -1155,7 +1156,9 @@ class _vi_dd_action(sublime_plugin.TextCommand):
         row = [self.view.rowcol(s.begin())[0] for s in self.view.sel()][0]
         regions_transformer_reversed(self.view, f)
         self.view.sel().clear()
-        self.view.sel().add(sublime.Region(self.view.text_point(row, 0)))
+
+        pt = utils.next_non_white_space_char(self.view, self.view.text_point(row, 0))
+        self.view.sel().add(sublime.Region(pt))
 
 
 class _vi_big_s_action(sublime_plugin.TextCommand):
